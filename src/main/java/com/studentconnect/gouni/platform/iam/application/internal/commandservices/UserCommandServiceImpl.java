@@ -23,13 +23,13 @@ import java.util.Optional;
 
 @Service
 @AllArgsConstructor
-public class UserCommandServicesImpl implements UserCommandService {
+public class UserCommandServiceImpl implements UserCommandService {
     private final UserRepository userRepository;
     private final HashingService hashingService;
     private final TokenService tokenService;
     private final RoleRepository roleRepository;
     private final ApplicationEventPublisher eventPublisher;
-    private static final Logger logger = LoggerFactory.getLogger(UserCommandServicesImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(UserCommandServiceImpl.class);
 
     @Override
     public Optional<ImmutablePair<User, String>> handle(SignInCommand command) {
