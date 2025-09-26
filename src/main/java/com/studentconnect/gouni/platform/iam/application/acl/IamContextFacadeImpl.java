@@ -1,5 +1,6 @@
 package com.studentconnect.gouni.platform.iam.application.acl;
 
+import com.studentconnect.gouni.platform.iam.domain.model.aggregates.PassengerUser;
 import com.studentconnect.gouni.platform.iam.domain.model.aggregates.User;
 import com.studentconnect.gouni.platform.iam.domain.model.queries.GetUserByEmailQuery;
 import com.studentconnect.gouni.platform.iam.domain.model.queries.GetUserByIdQuery;
@@ -21,6 +22,15 @@ public class IamContextFacadeImpl implements IamContextFacade {
     @Override
     public Optional<User> fetchUserById(UUID userId) {
         return userQueryService.handle(new GetUserByIdQuery(userId));
+    }
+
+    @Override
+    public Optional<PassengerUser> fetchPassengerUserById(UUID passengerUserId) {
+        var getUserByIdQuery = new GetUserByIdQuery(passengerUserId);
+        var result = userQueryService.handle(getUserByIdQuery);
+        if (result.isEmpty() || !(result.get() instanceof PassengerUser))
+            return Optional.empty();
+        return Optional.of((PassengerUser) result.get());
     }
 
     @Override
