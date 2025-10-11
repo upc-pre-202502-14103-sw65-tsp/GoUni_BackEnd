@@ -34,4 +34,17 @@ public class UsersController {
                 .toList();
         return ResponseEntity.ok(resources);
     }
+
+    /**
+     * Fetches all drivers.
+     * @return a list of all driver resources.
+     */
+    @GetMapping("/drivers")
+    public ResponseEntity<List<UserResource>> getAllDrivers() {
+        var drivers = userQueryService.handle(new GetAllUsersByRoleQuery(Roles.DRIVER_ROLE));
+        List<UserResource> resources = drivers.stream()
+                .map(UserResourceFromEntityAssembler::toResourceFromEntity)
+                .toList();
+        return ResponseEntity.ok(resources);
+    }
 }
