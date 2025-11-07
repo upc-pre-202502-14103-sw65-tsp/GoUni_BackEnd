@@ -38,7 +38,7 @@ public class BearerAuthorizationRequestFilter extends OncePerRequestFilter {
 
     try {
       String token = tokenService.getBearerTokenFrom(request);
-      LOGGER.info("Token: {}", token);
+      LOGGER.info("Token: {} for {} {}", token, request.getMethod(), request.getRequestURI());
       if (token != null && tokenService.validateToken(token)) {
         String email = tokenService.getEmailByToken(token);
         var userDetails = userDetailsService.loadUserByUsername(email);
@@ -47,7 +47,7 @@ public class BearerAuthorizationRequestFilter extends OncePerRequestFilter {
                 UsernamePasswordAuthenticationTokenBuilder.build(userDetails, request));
       }
       else {
-        LOGGER.info("Token is not valid");
+        LOGGER.info("Token is not valid for {} {}", request.getMethod(), request.getRequestURI());
       }
 
     } catch (Exception e) {

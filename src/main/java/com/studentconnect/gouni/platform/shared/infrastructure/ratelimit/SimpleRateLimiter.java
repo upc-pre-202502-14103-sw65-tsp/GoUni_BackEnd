@@ -3,10 +3,6 @@ package com.studentconnect.gouni.platform.shared.infrastructure.ratelimit;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.LongSupplier;
 
-/**
- * Simple fixed-window rate limiter per key.
- * Allows up to maxRequests within windowMillis for each key.
- */
 public class SimpleRateLimiter {
     private final int maxRequests;
     private final long windowMillis;

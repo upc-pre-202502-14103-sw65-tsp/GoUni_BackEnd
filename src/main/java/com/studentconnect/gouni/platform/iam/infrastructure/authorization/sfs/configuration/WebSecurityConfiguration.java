@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -39,6 +40,11 @@ public class WebSecurityConfiguration {
   private final BCryptHashingService hashingService;
 
   private final AuthenticationEntryPoint unauthorizedRequestHandler;
+
+  @Value("${security.permit.payment-intents:false}")
+  private boolean permitPaymentIntents;
+  @Value("${security.permit.emails:false}")
+  private boolean permitEmails;
 
   /**
    * This method creates the Bearer Authorization Request Filter.
@@ -100,13 +106,19 @@ public class WebSecurityConfiguration {
     http.csrf(csrfConfigurer -> csrfConfigurer.disable())
         .exceptionHandling(exceptionHandling -> exceptionHandling.authenticationEntryPoint(unauthorizedRequestHandler))
         .sessionManagement(customizer -> customizer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-        .authorizeHttpRequests(
-            authorizeRequests -> authorizeRequests.requestMatchers(
-                "/api/v1/authentication/**","/api/v1/users/**", "/v3/api-docs/**", "/swagger-ui.html",
-                "/swagger-ui/**", "/swagger-resources/**", "/webjars/**")
-                .permitAll()
-                .anyRequest()
-                .authenticated());
+        .authorizeHttpRequests(authorizeRequests -> {
+          authorizeRequests.requestMatchers(
+              "/api/v1/authentication/**","/api/v1/users/**", "/v3/api-docs/**", "/swagger-ui.html",
+              "/swagger-ui/**", "/swagger-resources/**", "/webjars/**")
+              .permitAll();
+          if (permitPaymentIntents) {
+            authorizeRequests.requestMatchers("/api/v1/payment-intents/**").permitAll();
+          }
+          if (permitEmails) {
+            authorizeRequests.requestMatchers("/api/v1/emails/**").permitAll();
+          }
+          authorizeRequests.anyRequest().authenticated();
+        });
     http.authenticationProvider(authenticationProvider());
     http.addFilterBefore(authorizationRequestFilter(), UsernamePasswordAuthenticationFilter.class);
     return http.build();
