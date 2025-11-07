@@ -1,5 +1,6 @@
 package com.studentconnect.gouni.platform.iam.application.acl;
 
+import com.studentconnect.gouni.platform.iam.domain.model.aggregates.DriverUser;
 import com.studentconnect.gouni.platform.iam.domain.model.aggregates.PassengerUser;
 import com.studentconnect.gouni.platform.iam.domain.model.aggregates.User;
 import com.studentconnect.gouni.platform.iam.domain.model.queries.GetUserByEmailQuery;
@@ -31,6 +32,15 @@ public class IamContextFacadeImpl implements IamContextFacade {
         if (result.isEmpty() || !(result.get() instanceof PassengerUser))
             return Optional.empty();
         return Optional.of((PassengerUser) result.get());
+    }
+
+    @Override
+    public Optional<DriverUser> fetchDriverUserById(UUID driverUserId) {
+        var getUserByIdQuery = new GetUserByIdQuery(driverUserId);
+        var result = userQueryService.handle(getUserByIdQuery);
+        if (result.isEmpty() || !(result.get() instanceof DriverUser))
+            return Optional.empty();
+        return Optional.of((DriverUser) result.get());
     }
 
     @Override
