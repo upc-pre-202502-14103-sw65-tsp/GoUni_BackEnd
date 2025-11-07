@@ -17,7 +17,7 @@ public class PaymentIntentCommandServiceImpl implements PaymentIntentCommandServ
     @Override
     public PaymentIntent handle(CreatePaymentIntentCommand command) {
         try {
-            return stripePaymentService.createPaymentIntent(command.amount(), command.currency());
+            return stripePaymentService.createPaymentIntent(command.amount(), command.currency(), command.passengerUserId());
         } catch (Exception e) {
             throw new RuntimeException("Failed to create payment intent: " + e.getMessage(), e);
         }

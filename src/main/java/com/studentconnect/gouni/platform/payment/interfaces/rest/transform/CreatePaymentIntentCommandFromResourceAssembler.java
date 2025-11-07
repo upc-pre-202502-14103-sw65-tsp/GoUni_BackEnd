@@ -7,7 +7,8 @@ public class CreatePaymentIntentCommandFromResourceAssembler {
     public static CreatePaymentIntentCommand toCommandFromResource(CreatePaymentIntentResource resource) {
         return new CreatePaymentIntentCommand(
                 resource.amount(),
-                resource.currency()
+                resource.currency(),
+                resource.passengerUserId()
         );
     }
 }
