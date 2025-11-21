@@ -1,8 +1,7 @@
 package com.studentconnect.gouni.platform.carpooling.interfaces.rest;
 
-import com.studentconnect.gouni.platform.carpooling.domain.model.queries.GetAllRidesByDriverUserIdQuery;
-import com.studentconnect.gouni.platform.carpooling.domain.model.queries.GetAllRidesByPassengerUserIdQuery;
-import com.studentconnect.gouni.platform.carpooling.domain.model.queries.GetAllRidesQuery;
+import com.studentconnect.gouni.platform.carpooling.domain.model.queries.*;
+import com.studentconnect.gouni.platform.carpooling.domain.model.valueobjects.RideStatus;
 import com.studentconnect.gouni.platform.carpooling.domain.services.RideCommandService;
 import com.studentconnect.gouni.platform.carpooling.domain.services.RideQueryService;
 import com.studentconnect.gouni.platform.carpooling.interfaces.rest.resources.CreateRideResource;
@@ -85,5 +84,26 @@ public class RidesController {
                 .map(RideResourceFromEntityAssembler::toResourceFromEntity)
                 .toList();
         return ResponseEntity.ok(rideResources);
+    }
+
+    @GetMapping("/status/{status}")
+    public ResponseEntity<List<RideResource>> getaLLRidesByStatus(@PathVariable String status) {
+        var rideStatus = RideStatus.valueOf(status.toUpperCase());
+        var query = new GetAllRidesByStatusQuery(rideStatus);
+        var rides = queryService.handle(query);
+        var resources = rides.stream()
+                .map(RideResourceFromEntityAssembler::toResourceFromEntity)
+                .toList();
+        return ResponseEntity.ok(resources);
+    }
+
+    @GetMapping("/location")
+    public ResponseEntity<List<RideResource>> getRidesByLocation(@RequestParam String location) {
+        var query = new GetAllRidesByLocationQuery(location);
+        var rides = queryService.handle(query);
+        var resources = rides.stream()
+                .map(RideResourceFromEntityAssembler::toResourceFromEntity)
+                .toList();
+        return ResponseEntity.ok(resources);
     }
 }

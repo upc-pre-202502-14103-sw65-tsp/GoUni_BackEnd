@@ -1,10 +1,7 @@
 package com.studentconnect.gouni.platform.carpooling.domain.services;
 
 import com.studentconnect.gouni.platform.carpooling.domain.model.aggregates.Ride;
-import com.studentconnect.gouni.platform.carpooling.domain.model.queries.GetAllRidesByDriverUserIdQuery;
-import com.studentconnect.gouni.platform.carpooling.domain.model.queries.GetAllRidesByPassengerUserIdQuery;
-import com.studentconnect.gouni.platform.carpooling.domain.model.queries.GetAllRidesQuery;
-import com.studentconnect.gouni.platform.carpooling.domain.model.queries.GetRideByIdQuery;
+import com.studentconnect.gouni.platform.carpooling.domain.model.queries.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,4 +11,7 @@ public interface RideQueryService {
     List<Ride> handle(GetAllRidesByPassengerUserIdQuery query);
     List<Ride> handle(GetAllRidesByDriverUserIdQuery query);
     List<Ride> handle(GetAllRidesQuery query);
+
+    List<Ride> handle(GetAllRidesByStatusQuery query);
+    List<Ride> handle(GetAllRidesByLocationQuery query);
 }
