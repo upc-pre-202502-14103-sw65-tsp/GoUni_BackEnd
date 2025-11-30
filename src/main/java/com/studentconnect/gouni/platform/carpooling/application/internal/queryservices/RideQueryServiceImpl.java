@@ -1,10 +1,7 @@
 package com.studentconnect.gouni.platform.carpooling.application.internal.queryservices;
 
 import com.studentconnect.gouni.platform.carpooling.domain.model.aggregates.Ride;
-import com.studentconnect.gouni.platform.carpooling.domain.model.queries.GetAllRidesByDriverUserIdQuery;
-import com.studentconnect.gouni.platform.carpooling.domain.model.queries.GetAllRidesByPassengerUserIdQuery;
-import com.studentconnect.gouni.platform.carpooling.domain.model.queries.GetAllRidesQuery;
-import com.studentconnect.gouni.platform.carpooling.domain.model.queries.GetRideByIdQuery;
+import com.studentconnect.gouni.platform.carpooling.domain.model.queries.*;
 import com.studentconnect.gouni.platform.carpooling.domain.services.RideQueryService;
 import com.studentconnect.gouni.platform.carpooling.infrastructure.persistence.jpa.repositories.RideRepository;
 import lombok.AllArgsConstructor;
@@ -36,5 +33,15 @@ public class RideQueryServiceImpl implements RideQueryService {
     @Override
     public List<Ride> handle(GetAllRidesQuery query) {
         return rideRepository.findAll();
+    }
+
+    @Override
+    public List<Ride> handle(GetAllRidesByStatusQuery query) {
+        return rideRepository.findAllByRideStatus(query.rideStatus());
+    }
+
+    @Override
+    public List<Ride> handle(GetAllRidesByLocationQuery query) {
+        return rideRepository.findAllByDropOffGeoLocationOrPickUpGeoLocation(query.location(), query.location());
     }
 }

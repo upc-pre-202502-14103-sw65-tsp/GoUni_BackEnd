@@ -42,12 +42,16 @@ class PaymentIntentControllerTest {
     private ConfirmPaymentIntentResource validConfirmResource;
     private PaymentIntent mockPaymentIntent;
     private PaymentConfirmation mockPaymentConfirmation;
+    private UUID testPassengerUserId;
 
     @BeforeEach
     void setUp() {
+        testPassengerUserId = UUID.randomUUID();
+        
         validCreateResource = new CreatePaymentIntentResource(
                 5000L,
-                "usd"
+                "usd",
+                testPassengerUserId
         );
 
         validConfirmResource = new ConfirmPaymentIntentResource(
@@ -113,7 +117,8 @@ class PaymentIntentControllerTest {
     void shouldCreatePaymentIntentWithDifferentAmounts() {
         CreatePaymentIntentResource highAmountResource = new CreatePaymentIntentResource(
                 100000L,
-                "usd"
+                "usd",
+                testPassengerUserId
         );
 
         when(commandService.handle(any(CreatePaymentIntentCommand.class)))
@@ -134,7 +139,8 @@ class PaymentIntentControllerTest {
     void shouldCreatePaymentIntentWithDifferentCurrencies() {
         CreatePaymentIntentResource eurResource = new CreatePaymentIntentResource(
                 5000L,
-                "eur"
+                "eur",
+                testPassengerUserId
         );
 
         when(commandService.handle(any(CreatePaymentIntentCommand.class)))
@@ -247,7 +253,8 @@ class PaymentIntentControllerTest {
     void shouldHandleZeroAmountPaymentIntent() {
         CreatePaymentIntentResource zeroAmountResource = new CreatePaymentIntentResource(
                 0L,
-                "usd"
+                "usd",
+                testPassengerUserId
         );
 
         when(commandService.handle(any(CreatePaymentIntentCommand.class)))
