@@ -1,7 +1,6 @@
 package com.studentconnect.gouni.platform.chat.interfaces.websocket;
 
 import com.studentconnect.gouni.platform.chat.domain.services.ChatCommandService;
-import com.studentconnect.gouni.platform.chat.interfaces.rest.resources.MessageResource;
 import com.studentconnect.gouni.platform.chat.interfaces.rest.resources.SendMessageResource;
 import com.studentconnect.gouni.platform.chat.interfaces.rest.transform.MessageResourceFromEntityAssembler;
 import com.studentconnect.gouni.platform.chat.interfaces.rest.transform.SendMessageCommandFromResourceAssembler;
