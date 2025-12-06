@@ -1,0 +1,73 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:16-alpine
+    container_name: gouni-postgres
+    environment:
+      POSTGRES_DB: gouni_db
+      POSTGRES_USER: gouni_user
+      POSTGRES_PASSWORD: gouni_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U gouni_user -d gouni_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - gouni-network
+
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    container_name: gouni-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    command: redis-server --appendonly yes
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    networks:
+      - gouni-network
+
+  # Spring Boot Application
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: gouni-backend
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      # Database
+      DATABASE_URL: jdbc:postgresql://postgres:5432/gouni_db
+      DATABASE_USERNAME: gouni_user
+      DATABASE_PASSWORD: gouni_password
+      
+      # Redis
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+    ports:
+      - "8080:8080"
+    networks:
+      - gouni-network
+    restart: unless-stopped
+
+volumes:
+  postgres-data:
+  redis-data:
+
+networks:
+  gouni-network:
+    driver: bridge
