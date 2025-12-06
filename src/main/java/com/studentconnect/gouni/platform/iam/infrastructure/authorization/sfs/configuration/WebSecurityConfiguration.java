@@ -109,7 +109,8 @@ public class WebSecurityConfiguration {
         .authorizeHttpRequests(authorizeRequests -> {
           authorizeRequests.requestMatchers(
               "/api/v1/authentication/**","/api/v1/users/**", "/v3/api-docs/**", "/swagger-ui.html",
-              "/swagger-ui/**", "/swagger-resources/**", "/webjars/**")
+              "/swagger-ui/**", "/swagger-resources/**", "/webjars/**",
+              "/ws/**", "/app/**", "/topic/**", "/queue/**")  // WebSocket endpoints
               .permitAll();
           if (permitPaymentIntents) {
             authorizeRequests.requestMatchers("/api/v1/payment-intents/**").permitAll();
