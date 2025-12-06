@@ -54,6 +54,10 @@ public class User extends AuditableAbstractAggregateRoot<User> {
 
     private String driverDescription;
 
+    private Double averageRating = 0.0;
+
+    private Long totalRatings = 0L;
+
     public User() { }
 
     public User(
